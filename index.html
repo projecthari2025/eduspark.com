@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduSpark - Project Showcase</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #10B981;
+            --secondary: #059669;
+            --background: #111827;
+            --card-bg: #1F2937;
+            --text: #F3F4F6;
+            --text-secondary: #D1D5DB;
+            --hover: #34D399;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+        }
+
+        /* Loading Animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--background);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loader-content {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--card-bg);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        header {
+            background: var(--card-bg);
+            padding: 1rem;
+            box-shadow: 0 2px 15px rgba(16, 185, 129, 0.2);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            height: 60px;
+        }
+
+        .logo img {
+            height: 100%;
+            filter: brightness(0) invert(1);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.2));
+            color: var(--text);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(16, 185, 129, 0.05) 10px,
+                rgba(16, 185, 129, 0.05) 20px
+            );
+            animation: backgroundMove 20s linear infinite;
+        }
+
+        @keyframes backgroundMove {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.2s;
+            opacity: 0;
+            animation-fill-mode: forwards;
+            color: var(--text-secondary);
+        }
+
+        /* Categories */
+        .categories {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .category-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(16, 185, 129, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: 0.6s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.2);
+            border-color: var(--primary);
+        }
+
+        .category-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .category-card i {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .category-card:hover i {
+            transform: scale(1.2);
+            color: var(--hover);
+        }
+
+        /* Projects */
+        .projects {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+            display: none;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.2);
+        }
+
+        .project-images {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+        }
+
+        .project-image-container {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .project-image {
+            width: 100%;
+            flex-shrink: 0;
+            object-fit: cover;
+            filter: brightness(0.9);
+        }
+
+        .image-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(16, 185, 129, 0.8);
+            color: white;
+            padding: 1rem;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            transition: background 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .image-nav:hover {
+            background: var(--hover);
+        }
+
+        .prev-image { left: 0; border-radius: 0 5px 5px 0; }
+        .next-image { right: 0; border-radius: 5px 0 0 5px; }
+
+        .project-info {
+            padding: 2.5rem;
+        }
+
+        .project-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .project-description {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .project-cost {
+            font-size: 1.4rem;
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .request-btn {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .request-btn:hover {
+            background: var(--hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-content h2 {
+            margin-bottom: 1.5rem;
+            color: var(--text);
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            background: var(--background);
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+            outline: none;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Back Button */
+        .back-btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            display: none;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .back-btn:hover {
+            background: var(--hover);
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project-images {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Animation -->
+    <div class="loader">
+        <div class="loader-content"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <img src="hello.png" alt="EduSpark Logo">
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div>
+            <h1>Welcome to EduSpark</h1>
+            <p>Discover and Request Amazing Projects</p>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories">
+        <button class="back-btn">← Back to Categories</button>
+        <div class="category-grid">
+            <div class="category-card" data-category="hardware">
+                <i class="fas fa-microchip"></i>
+                <h2>Hardware Projects</h2>
+            </div>
+            <div class="category-card" data-category="software">
+                <i class="fas fa-code"></i>
+                <h2>Software Projects</h2>
+            </div>
+            <div class="category-card" data-category="cybersecurity">
+                <i class="fas fa-shield-alt"></i>
+                <h2>Cybersecurity Projects</h2>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects -->
+    <section class="projects">
+        <!-- Projects will be dynamically added here -->
+    </section>
+
+    <!-- Request Modal -->
+    <div class="modal">
+        <div class="modal-content">
+            <h2>Request Project</h2>
+            <form id="requestForm">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="college">College Name</label>
+                    <input type="text" id="college" required>
+                </div>
+                <div class="form-group">
+                    <label for="class">Class</label>
+                    <input type="text" id="class" required>
+                </div>
+                <div class="form-group">
+                    <label for="request">Additional Request</label>
+                    <textarea id="request" rows="4"></textarea>
+                </div>
+                <button type="submit" class="request-btn">Submit Request</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample project data
+        const projects = {
+            hardware: [
+                {
+                    title: "Arduino Smart Home System",
+                    description: "A complete smart home automation system using Arduino, including temperature control, lighting, and security features.",
+                    images: [
+                        "https://picsum.photos/800/600?random=1",
+                        "https://picsum.photos/800/600?random=2",
+                        "https://picsum.photos/800/600?random=3"
+                    ],
+                    cost: "$299",
+                    owner: "John Doe"
+                },
+                {
+                    title: "Raspberry Pi Weather Station",
+                    description: "Build your own weather monitoring station using Raspberry Pi and various sensors.",
+                    images: [
+                        "https://picsum.photos/800/600?random=4",
+                        "https://picsum.photos/800/600?random=5"
+                    ],
+                    cost: "$199",
+                    owner: "Jane Smith"
+                }
+            ],
+            software: [
+                {
+                    title: "AI Chat Application",
+                    description: "A real-time chat application with AI-powered language translation and sentiment analysis.",
+                    images: [
+                        "https://picsum.photos/800/600?random=6",
+                        "https://picsum.photos/800/600?random=7"
+                    ],
+                    cost: "$399",
+                    owner: "Mike Johnson"
+                }
+            ],
+            cybersecurity: [
+                {
+                    title: "Network Security Scanner",
+                    description: "A comprehensive network security scanning tool with vulnerability assessment capabilities.",
+                    images: [
+                        "https://picsum.photos/800/600?random=8",
+                        "https://picsum.photos/800/600?random=9"
+                    ],
+                    cost: "$499",
+                    owner: "Sarah Wilson"
+                }
+            ]
+        };
+
+        // DOM Elements
+        const loader = document.querySelector('.loader');
+        const categoriesSection = document.querySelector('.categories');
+        const projectsSection = document.querySelector('.projects');
+        const categoryCards = document.querySelectorAll('.category-card');
+        const backBtn = document.querySelector('.back-btn');
+        const modal = document.querySelector('.modal');
+        const requestForm = document.getElementById('requestForm');
+
+        // Hide loader after page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 1000);
+        });
+
+        // Category selection
+        categoryCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const category = card.dataset.category;
+                showProjects(category);
+            });
+        });
+
+        // Show projects for selected category
+        function showProjects(category) {
+            categoriesSection.style.display = 'none';
+            projectsSection.style.display = 'block';
+            backBtn.style.display = 'block';
+
+            const projectsHTML = projects[category].map(project => `
+                <div class="project-card">
+                    <div class="project-images">
+                        <div class="project-image-container">
+                            ${project.images.map(img => `
+                                <img src="${img}" class="project-image" alt="${project.title}">
+                            `).join('')}
+                        </div>
+                        <button class="image-nav prev-image">←</button>
+                        <button class="image-nav next-image">→</button>
+                    </div>
+                    <div class="project-info">
+                        <h2 class="project-title">${project.title}</h2>
+                        <p class="project-description">${project.description}</p>
+                        <p class="project-cost">Cost: ${project.cost}</p>
+                        <p>Owner: ${project.owner}</p>
+                        <button class="request-btn" data-project="${project.title}">Request Project</button>
+                    </div>
+                </div>
+            `).join('');
+
+            projectsSection.innerHTML = projectsHTML;
+
+            // Add image navigation listeners
+            document.querySelectorAll('.project-card').forEach(card => {
+                const container = card.querySelector('.project-image-container');
+                const images = card.querySelectorAll('.project-image');
+                let currentImage = 0;
+
+                card.querySelector('.next-image').addEventListener('click', () => {
+                    currentImage = (currentImage + 1) % images.length;
+                    container.style.transform = `translateX(-${currentImage * 100}%)`;
+                });
+
+                card.querySelector('.prev-image').addEventListener('click', () => {
+                    currentImage = (currentImage - 1 + images.length) % images.length;
+                    container.style.transform = `translateX(-${currentImage * 100}%)`;
+                });
+
+                card.querySelector('.request-btn').addEventListener('click', () => {
+                    showRequestModal(card.querySelector('.project-title').textContent);
+                });
+            });
+        }
+
+        // Back button functionality
+        backBtn.addEventListener('click', () => {
+            projectsSection.style.display = 'none';
+            categoriesSection.style.display = 'block';
+            backBtn.style.display = 'none';
+        });
+
+        // Modal functionality
+        function showRequestModal(projectTitle) {
+            modal.style.display = 'flex';
+            currentProject = projectTitle;
+        }
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Handle form submission
+        requestForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const college = document.getElementById('college').value;
+            const className = document.getElementById('class').value;
+            const request = document.getElementById('request').value;
+
+            const mailtoLink = `mailto:owner@eduspark.com?subject=Project Request: ${currentProject}&body=Name: ${name}%0D%0ACollege: ${college}%0D%0AClass: ${className}%0D%0AProject: ${currentProject}%0D%0AAdditional Request: ${request}`;
+
+            window.location.href = mailtoLink;
+            modal.style.display = 'none';
+            requestForm.reset();
+        });
+    </script>
+</body>
+</html>
